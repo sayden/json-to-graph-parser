@@ -1,0 +1,4 @@
+{
+  "name":"orientdb",
+  "main":"index.js"
+}
