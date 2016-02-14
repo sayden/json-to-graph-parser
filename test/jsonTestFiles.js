@@ -1,10 +1,21 @@
 module.exports = {
   simple: {
     a:"b",
-    c:["d", "e", "f"],
+    c:["d"],
     g:{
       h:"i",
-    }
+      j:["k"],
+      n:{
+        o:"p",
+        q:"v",
+        w:{x:"y"}
+      }
+    },
+    z:[
+      {
+        asdf:"qwer"
+      }
+    ]
   },
 
   complex: {
