@@ -6,10 +6,10 @@ var parser = require('./parsers');
 
 // OrientDB writer
 var orient = require("./orientdb");
-orient.init("localhost", "my_db_2", "root", "root");
+orient.init("localhost", "test", "root", "root");
 
 //Cayley writer
 var cayley = require('./cayley');
 
-parser.parse(testFiles.simple, "origin", orient.add, orient.finish);
-// parser.parse(testFiles.simple, "origin", cayley.add, cayley.finish);
+parser.parse("origin", testFiles.simple, orient.add, orient.finish);
+// parser.parse("origin", testFiles.simple, cayley.add, cayley.finish);
