@@ -1,6 +1,7 @@
 var messagesToPrint = [];
 var triplets = [];
 var edgePrefix = "has_";
+const DEBUG = false;
 
 module.exports = {
   host: null,
@@ -27,31 +28,21 @@ module.exports = {
   },
 
   add: function(s, p, o){
-    if (p === null){
-      triplets.push([s, "son", o]);
-    } else {
-      triplets.push([s, p, o]);
-    }
+    triplets.push([s, "has", o]);
   },
 
   finish: function(){
 
     messagesToPrint.forEach(function(m){
-      process.stdout.write(m);
+      if(DEBUG){
+        var res = m.split(";");
+        res.forEach(function(m){
+          console.log(m)
+        });
+      } else {
+        process.stdout.write(m);
+      }
     });
-
-    //create vertices classes
-    // var classes = triplets.map(function(t){
-    //   return t[1];
-    // });
-    //
-    // //remove duplicates
-    // classes.filter(function(item, pos){
-    //   return classes.indexOf(item) == pos;
-    // }).forEach(function(c){
-    //   process.stdout.write(orientCreateClass(c, "V"));
-    //   process.stdout.write(orientCreateClass(edgePrefix + c, "E"));
-    // });
 
     //create vertices
     var res = triplets.map(function(t){
@@ -60,18 +51,17 @@ module.exports = {
       return a.concat(b);
     });
 
-
     //remove duplicates
     res.filter(function(item, pos) {
       var i = res.indexOf(item);
       return i === pos;
     }).forEach(function(s){
-      process.stdout.write(orientCreateVertex(s, "V"));
+      process.stdout.write(orientCreateVertex(s));
     });
 
     //create edges
     triplets.map(function(t){
-      process.stdout.write(orientCreateEdge(t[0], t[1], t[2]));
+      process.stdout.write(orientCreateEdge(t[0], t[2]));
     });
   }
 }
@@ -83,10 +73,10 @@ function orientCreateClass(n, e){
   return "CREATE CLASS " + n + " EXTENDS " + e + ";"
 }
 
-function orientCreateVertex (o, vType){
-  return "CREATE VERTEX " + vType + " SET name='" + o + "';";
+function orientCreateVertex (o){
+  return "CREATE VERTEX V SET name='" + o + "';";
 }
 
-function orientCreateEdge(s, p, o){
-  return "CREATE EDGE " + p + " FROM (SELECT FROM V WHERE name='" + s + "') TO (SELECT FROM V WHERE name='" + o + "');";
+function orientCreateEdge(s, o){
+  return "CREATE EDGE has FROM (SELECT FROM V WHERE name='" + s + "') TO (SELECT FROM V WHERE name='" + o + "');";
 }
