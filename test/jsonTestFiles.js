@@ -1,7 +1,7 @@
 module.exports = {
   simple: {
     a:"b",
-    c:["d"],
+    c:["d", "e", "f"],
     g:{
       h:"i",
       j:["k"],
