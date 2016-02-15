@@ -1,28 +1,36 @@
+var DEBUG = true
+
 module.exports = {
   parse: function(origin, o, printer, finishCallback){
-    var self = this;
     for(var k in o){
       if(o.hasOwnProperty(k)){
+
+        // console.log("0:", origin, o, typeof origin, typeof o, Object.prototype.toString.call( o[k] ))
         if( Object.prototype.toString.call( o[k] ) === '[object Object]') {
-          // console.log("1:", origin, k, o[k])
-          this.parse(origin, k, printer);
-          this.parse(k, o[k], printer);
+          DEBUG ? console.log("1:", origin, k, o[k]) : null;
+          if(isNumeric(k)){
+            this.parse(origin, o[k], printer);
+          } else {
+            this.parse(origin, k, printer);
+            this.parse(k, o[k], printer);
+          }
 
         } else if(Object.prototype.toString.call( o[k] ) === '[object Array]') {
-          // console.log("2:", origin, k, o[k])
+          DEBUG ? console.log("2:", origin, k, o[k]) : null;
           this.parse(origin, k, printer);
-          o[k].forEach(function(arObject){
+          for(var i = 0; i<o[k].length; i++){
             var temp = {};
-            temp[k] = arObject;
-            self.parse(k, arObject, printer);
-          });
+            temp[0] = o[k][i];
+            this.parse(k, temp, printer);
+          }
 
         } else {
-          if(k == 0){
-            // console.log("3.1:", origin, k, o[k], ", print:", origin, "has", o[k])
+          //[object String]
+          if(isNumeric(k)){
+            DEBUG ? console.log("3.1:", origin, k, o[k], ", print:", origin, "has", o[k]) : null;
             printer(origin, "has", o[k]);
           } else {
-            // console.log("3.2:", origin, k, o[k], ", print:", origin, "has", k, ",", k, "has", o[k])
+            DEBUG ? console.log("3.2:", origin, k, o[k], ", print:", origin, "has", k, ",", k, "has", o[k]) : null;
             printer(origin, "has", k);
             printer(k, "has", o[k]);
           }
@@ -34,4 +42,8 @@ module.exports = {
         finishCallback();
     }
   }
+}
+
+function isNumeric(n) {
+  return !isNaN(parseFloat(n)) && isFinite(n);
 }
